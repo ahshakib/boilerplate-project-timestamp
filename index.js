@@ -49,7 +49,7 @@ app.get('/api/:date?', (req, res) => {
       })
     }
   } else if(id.length === 1) {
-    const d = new Date(parseInt(id));
+    const d = new Date(parseInt(date));
     res.json({
       "unix": parseInt(id),
       "utc": d.toUTCString()
