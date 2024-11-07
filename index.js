@@ -34,12 +34,12 @@ app.get('/api', (req, res) => {
   })
 })
 
-app.get('/api/:id', (req, res) => {
-  const { id } = req.params;
+app.get('/api/:date?', (req, res) => {
+  const { date } = req.params;
   
-  let date = id.split("-");
-  if (date.length === 3) {
-    const d = new Date(id)
+  let id = date.split("-");
+  if (id.length === 3) {
+    const d = new Date(date)
     if (isNaN(d.getTime())) {
       res.json({ error: "Invalid Date" });
     } else {
@@ -48,12 +48,14 @@ app.get('/api/:id', (req, res) => {
         "utc": d.toUTCString()
       })
     }
-  } else {
-    const d = new Date(Number(id));
+  } else if(id.length === 1) {
+    const d = new Date(parseInt(id));
     res.json({
-      "unix": Number(id),
+      "unix": parseInt(id),
       "utc": d.toUTCString()
     })
+  } else {
+    res.json({ error: "Invalid Date" });
   }
 
 })
