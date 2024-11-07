@@ -39,13 +39,16 @@ app.get('/api/:id', (req, res) => {
     let date = id.split("-");
     if(date.length === 3){
       const d = new Date(id)
-      res.json({
-        "unix": Date.UTC(Number(date[0]), Number(date[1] - 1), Number(date[2])),
-        "utc": d.toUTCString()
-      })
+      if(isNaN(d.getTime)) {
+        return { error : "Invalid Date" };
+      } else {
+        res.json({
+          "unix": d.getTime(),
+          "utc": d.toUTCString()
+        })
+      }
     } else {
-      const d = new Date();
-      d.setTime(Number(id));
+      const d = new Date(Number(id));
       res.json({
         "unix": Number(id),
         "utc": d.toUTCString()
