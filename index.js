@@ -30,7 +30,7 @@ app.get('/api/:date?', (req, res) => {
   let d;
   if(!date) {
     d = new Date();
-  } else if(date.split("-").length === 1) {
+  } else if(/\d{5,}/.test(date)) {
     d = new Date(parseInt(date));
   } else {
     d = new Date(date);
