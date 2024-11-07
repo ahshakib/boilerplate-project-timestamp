@@ -25,32 +25,26 @@ app.get("/api/hello", function (req, res) {
 });
 
 
-app.get("/api/:date?", (req, res) => {
-  // Extract date parameter from request 
-  const dateParam = req.params.date; 
-  // Initialize variable to hold date object
-   let dateObject; 
-  // if no date parameter is provided, use current date
-  if (!dateParam) {
-    dateObject = new Date(); 
+app.get('/api/:date?', (req, res) => {
+  const { date } = req.params;
+  let d;
+  if(!date) {
+    d = new Date();
+  } else if(date.split("-").length === 1) {
+    d = new Date(parseInt(date));
+  } else {
+    d = new Date(date);
   }
-  // if parameter is in unix timestamp format(5 or more digits), then convert it to a date object
-  else if (/\d{5,}/.test(dateParam)) {
-    dateObject = new Date(parseInt(dateParam)); 
+
+  if(isNaN(d)) {
+    return res.json({ error : "Invalid Date" })
+  } else {
+    return res.json({
+      unix: d.getTime(),
+      utc: d.toUTCString()
+    })
   }
-  // if date parameter in a string, then convert it to  a date object 
-  else {
-    dateObject = new Date(dateParam); 
-  }
-  // if date object is invalid, return a error response ({ error: "Invalid Date" })
-  if (isNaN(dateObject)) {
-    return res.json({ error: "Invalid Date" }); 
-  }
-  // if date is valid, return unix timestamp and utc string
-  else {
-    return res.json({unix: dateObject.getTime(), utc: dateObject.toUTCString()}); 
-  }
-});
+})
 
 // Listen on port set in environment variable or default to 3000
 var listener = app.listen(process.env.PORT || 3000, function () {
