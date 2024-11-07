@@ -41,7 +41,7 @@ app.get('/api/:id', (req, res) => {
   if (date.length === 3) {
     const d = new Date(id)
     if (isNaN(d.getTime())) {
-      return { error: "Invalid Date" };
+      res.json({ error: "Invalid Date" });
     } else {
       res.json({
         "unix": d.getTime(),
